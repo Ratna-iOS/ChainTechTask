@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct PasswordManagerApp: App {
+    let persistenceController = CoreDataManager.shared
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .environment(\.managedObjectContext, persistenceController.context)
         }
     }
 }
