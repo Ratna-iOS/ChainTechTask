@@ -105,7 +105,13 @@ struct DetailView: View {
         let newAccount = Account(context: viewContext)
         newAccount.accountType = accountName
         newAccount.username = userName
-        newAccount.password = password
+        
+        if let encryptedPassword = EncryptionManager.encrypt(password: password) {
+            newAccount.password = encryptedPassword
+        } else {
+            alertManager.showAlert(title: "Error", message: "Failed to encrypt the password.")
+            return
+        }
         
         do {
             try viewContext.save()
@@ -114,6 +120,8 @@ struct DetailView: View {
             print("Failed to save: \(error.localizedDescription)")
         }
     }
+
+    
     enum PasswordStrength: String {
         case empty = "", weak = "Weak", medium = "Medium", strong = "Strong"
         
